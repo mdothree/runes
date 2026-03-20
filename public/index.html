@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Runes - Free Online Elder Futhark Divination</title>
+    <meta name="description" content="Get your free runes reading online. Cast the Elder Futhark runes to receive ancient Norse wisdom and guidance.">
+    
+    <meta property="og:title" content="Runes - Ancient Norse Wisdom">
+    <meta property="og:description" content="Cast the Elder Futhark runes and receive guidance from Norse wisdom traditions.">
+    <meta property="og:type" content="website">
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23111'/><text x='16' y='24' font-size='20' text-anchor='middle' fill='%23c0c0c0'>ᚠ</text></svg>">
+    
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="stars"></div>
+    
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <h1>ᚠ Runes</h1>
+            </div>
+            <div class="nav-links">
+                <a href="#how-it-works">How It Works</a>
+                <a href="#runes">The Runes</a>
+                <a href="#pricing">Premium</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h2 class="hero-title">Seek Guidance from the Elder Futhark</h2>
+                <p class="hero-subtitle">24 ancient runes hold the wisdom of the Norse</p>
+                
+                <div class="question-section" id="question-section">
+                    <label for="question-input">What do you seek guidance on?</label>
+                    <textarea 
+                        id="question-input" 
+                        placeholder="Focus your mind on your question... (optional)"
+                        rows="3"
+                        maxlength="200"></textarea>
+                    <p class="char-count"><span id="char-count">0</span>/200</p>
+                </div>
+
+                <div class="spread-selector">
+                    <h3>Choose Your Cast</h3>
+                    <div class="spread-options">
+                        <div class="spread-option active" data-spread="single">
+                            <div class="spread-badge">FREE</div>
+                            <h4>Single Rune</h4>
+                            <p>Quick daily guidance</p>
+                            <span class="price">Free</span>
+                        </div>
+                        <div class="spread-option" data-spread="three">
+                            <div class="spread-badge premium">PREMIUM</div>
+                            <h4>Three Runes</h4>
+                            <p>Past • Present • Future</p>
+                            <span class="price">$4.99</span>
+                        </div>
+                        <div class="spread-option" data-spread="five">
+                            <div class="spread-badge premium">PREMIUM</div>
+                            <h4>Five Runes</h4>
+                            <p>Cross of destiny</p>
+                            <span class="price">$7.99</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-primary btn-cast" id="cast-btn">
+                    <span>Cast Runes</span>
+                </button>
+                <button class="btn-secondary btn-reset" id="reset-btn" style="display: none;">
+                    <span>Cast Again</span>
+                </button>
+            </div>
+        </section>
+
+        <section class="runes-display" id="runes-display" style="display: none;">
+            <div class="container">
+                <h3 class="section-title">Your Cast</h3>
+                <div class="runes-result" id="runes-result">
+                </div>
+            </div>
+        </section>
+
+        <section class="reading-section" id="reading-section" style="display: none;">
+            <div class="container">
+                <div class="reading-content">
+                    <h3>Your Reading</h3>
+                    
+                    <div class="free-reading" id="free-reading">
+                        <div class="rune-meanings" id="rune-meanings">
+                        </div>
+                    </div>
+
+                    <div class="premium-upsell" id="premium-upsell">
+                        <h4>Want Deeper Insights?</h4>
+                        <p>Unlock AI-powered personalized interpretation</p>
+                        <ul class="premium-features">
+                            <li>✨ AI-generated personal guidance</li>
+                            <li>✨ Connection to your question</li>
+                            <li>✨ Position-specific meanings</li>
+                            <li>✨ Custom affirmation</li>
+                        </ul>
+                        <button class="btn-premium" id="upgrade-btn">
+                            Get Premium Reading - $4.99
+                        </button>
+                    </div>
+
+                    <button class="btn-share" id="share-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="18" cy="5" r="3"></circle>
+                            <circle cx="6" cy="12" r="3"></circle>
+                            <circle cx="18" cy="19" r="3"></circle>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                        </svg>
+                        Share My Reading
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="section-light">
+            <div class="container">
+                <h2>How Runes Work</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-icon">🎯</div>
+                        <h3>Focus Your Mind</h3>
+                        <p>Hold your question as you prepare to cast</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">🪨</div>
+                        <h3>Cast the Runes</h3>
+                        <p>Let fate select which runes speak to you</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">📜</div>
+                        <h3>Receive Wisdom</h3>
+                        <p>Interpret the ancient guidance revealed</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="runes" class="runes-info">
+            <div class="container">
+                <h2>The Elder Futhark</h2>
+                <p class="runes-intro">24 ancient runes, each carrying the essence of cosmic forces.</p>
+                <div class="runes-grid" id="runes-grid">
+                </div>
+            </div>
+        </section>
+
+        <section id="pricing" class="pricing-section">
+            <div class="container">
+                <h2>Pricing</h2>
+                <div class="pricing-cards">
+                    <div class="pricing-card">
+                        <h3>Free</h3>
+                        <div class="price">$0</div>
+                        <ul>
+                            <li>Single rune casts</li>
+                            <li>Basic rune meanings</li>
+                            <li>Unlimited readings</li>
+                            <li>Share readings</li>
+                        </ul>
+                        <button class="btn-secondary">Start Reading</button>
+                    </div>
+                    <div class="pricing-card featured">
+                        <div class="badge">Most Popular</div>
+                        <h3>Premium</h3>
+                        <div class="price">$4.99</div>
+                        <ul>
+                            <li>AI-powered interpretations</li>
+                            <li>Multi-rune spreads</li>
+                            <li>Position-specific meanings</li>
+                            <li>Custom affirmations</li>
+                            <li>Question-linked guidance</li>
+                        </ul>
+                        <button class="btn-premium">Get Premium</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Runes Divination. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js" type="module"></script>
+</body>
+</html>
