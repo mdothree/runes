@@ -1,4 +1,4 @@
-import { runes, getRuneById, getRandomRune, castRunes } from './js/services/database.js';
+import { runes, getRuneById, getRandomRune, castRunes } from './services/database.js';
 
 let currentSpread = 'single';
 let currentRunes = [];
@@ -16,6 +16,7 @@ const elements = {
     spreadOptions: document.querySelectorAll('.spread-option'),
     castBtn: document.getElementById('cast-btn'),
     resetBtn: document.getElementById('reset-btn'),
+    newReadingBtn: document.getElementById('new-reading-btn'),
     runesDisplay: document.getElementById('runes-display'),
     runesResult: document.getElementById('runes-result'),
     readingSection: document.getElementById('reading-section'),
@@ -23,7 +24,11 @@ const elements = {
     runesGrid: document.getElementById('runes-grid'),
     premiumUpsell: document.getElementById('premium-upsell'),
     shareBtn: document.getElementById('share-btn'),
-    upgradeBtn: document.getElementById('upgrade-btn')
+    upgradeBtn: document.getElementById('upgrade-btn'),
+    premiumModal: document.getElementById('premium-modal'),
+    modalOverlay: document.getElementById('modal-overlay'),
+    modalClose: document.getElementById('modal-close'),
+    modalSkip: document.getElementById('modal-skip')
 };
 
 function init() {
@@ -37,7 +42,7 @@ function setupEventListeners() {
     elements.spreadOptions?.forEach(option => {
         option.addEventListener('click', () => {
             if (option.querySelector('.spread-badge.premium')) {
-                showPremiumMessage();
+                showPremiumModal();
                 return;
             }
             
@@ -49,8 +54,31 @@ function setupEventListeners() {
     
     elements.castBtn?.addEventListener('click', cast);
     elements.resetBtn?.addEventListener('click', reset);
+    elements.newReadingBtn?.addEventListener('click', reset);
     elements.shareBtn?.addEventListener('click', shareReading);
-    elements.upgradeBtn?.addEventListener('click', showPremiumUpsell);
+    elements.upgradeBtn?.addEventListener('click', showPremiumModal);
+    
+    elements.modalOverlay?.addEventListener('click', hidePremiumModal);
+    elements.modalClose?.addEventListener('click', hidePremiumModal);
+    elements.modalSkip?.addEventListener('click', hidePremiumModal);
+}
+
+function showPremiumMessage() {
+    showPremiumModal();
+}
+
+function showPremiumModal() {
+    if (elements.premiumModal) {
+        elements.premiumModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function hidePremiumModal() {
+    if (elements.premiumModal) {
+        elements.premiumModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
 }
 
 function updateCharCount() {
