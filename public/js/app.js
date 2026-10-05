@@ -92,10 +92,6 @@ function updateCharCount() {
     elements.charCount.textContent = length;
 }
 
-function showPremiumMessage() {
-    alert('Multi-rune spreads are premium features. Unlock them with a premium subscription!');
-}
-
 function cast() {
     const count = currentSpread === 'single' ? 1 : 
                   currentSpread === 'three' ? 3 : 5;
