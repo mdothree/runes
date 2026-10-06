@@ -5,7 +5,7 @@
     --accent: #2d2d2d;
     --bg: #0a0a0a;
     --text: #e0e0e0;
-    --text-muted: #808080;
+    --text-muted: #a3a3a3; /* UI-REVIEW: was #808080 (3.8:1 on card bg); now 6.0:1 */
     --card-bg: rgba(45, 45, 45, 0.8);
     --silver: linear-gradient(135deg, #c0c0c0, #a0a0a0);
 }
@@ -252,6 +252,11 @@ header nav {
     cursor: pointer;
     transition: all 0.3s;
     font-family: inherit;
+}
+
+/* UI-REVIEW: the 15px offset only belongs to the hero button that sits next to
+   "Cast Runes"; globally it pushed other .btn-secondary buttons off-center. */
+.btn-reset {
     margin-left: 15px;
 }
 
@@ -616,8 +621,22 @@ header nav {
 
 .runes-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    /* UI-REVIEW: 24 runes — use divisors of 24 so there's no orphan row
+       (auto-fill gave 7 columns -> 3 rows + a row of 3) */
+    grid-template-columns: repeat(8, 1fr);
     gap: 15px;
+}
+
+@media (max-width: 1100px) {
+    .runes-grid { grid-template-columns: repeat(6, 1fr); }
+}
+
+@media (max-width: 768px) {
+    .runes-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 480px) {
+    .runes-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 .rune-grid-card {
@@ -767,5 +786,9 @@ footer p {
     
     .btn-cast, .btn-reset {
         width: 100%;
+    }
+
+    .btn-reset {
+        margin-left: 0;
     }
 }

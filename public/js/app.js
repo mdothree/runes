@@ -60,9 +60,17 @@ function setupEventListeners() {
     
     elements.castBtn?.addEventListener('click', cast);
     elements.resetBtn?.addEventListener('click', reset);
-    elements.newReadingBtn?.addEventListener('click', reset);
+    // "Cast Again" in the reading re-casts (it used to only clear the results)
+    elements.newReadingBtn?.addEventListener('click', cast);
     elements.shareBtn?.addEventListener('click', shareReading);
-    elements.upgradeBtn?.addEventListener('click', showPremiumModal);
+    // #upgrade-btn already has onclick="handlePremiumPurchase()" in index.html;
+    // a second listener that opened the modal on top of the email prompt was
+    // removed (double-bound handler).
+
+    // Pricing "Start Reading" had no handler — take the user to the cast button
+    document.getElementById('start-reading-btn')?.addEventListener('click', () => {
+        elements.castBtn?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
     
     elements.modalOverlay?.addEventListener('click', hidePremiumModal);
     elements.modalClose?.addEventListener('click', hidePremiumModal);
@@ -122,7 +130,8 @@ function showRunes() {
     
     showReading();
     
-    elements.resetBtn.style.display = 'inline-block';
+    // (The hero "Cast Again" duplicated the still-visible "Cast Runes" button;
+    // re-casting is offered under the reading instead.)
     
     elements.runesDisplay.scrollIntoView({ behavior: 'smooth' });
 }
@@ -236,7 +245,6 @@ function showQuickRune(id) {
     elements.runesDisplay.style.display = 'block';
     elements.readingSection.style.display = 'block';
     elements.premiumUpsell.style.display = 'none';
-    elements.resetBtn.style.display = 'inline-block';
     
     elements.runesDisplay.scrollIntoView({ behavior: 'smooth' });
 }
@@ -290,6 +298,11 @@ async function getPremiumReading(runesData, question, spreadType) {
     }
 }
 
+// AI text is untrusted: escape before inserting as HTML.
+function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
 function showPremiumReading(reading) {
     if (!reading) return;
 
@@ -299,19 +312,19 @@ function showPremiumReading(reading) {
 
             <div class="meaning-block">
                 <h4>Opening Invocation</h4>
-                <p>${reading.opening}</p>
+                <p>${esc(reading.opening)}</p>
             </div>
 
             <div class="meaning-block">
                 <h4>Rune Interpretation</h4>
-                <p>${reading.interpretation}</p>
+                <p>${esc(reading.interpretation)}</p>
             </div>
 
             ${reading.insights && reading.insights.length > 0 ? `
             <div class="meaning-block">
                 <h4>Deep Insights</h4>
                 <ul class="insights-list">
-                    ${reading.insights.map(i => `<li>${i}</li>`).join('')}
+                    ${reading.insights.map(i => `<li>${esc(i)}</li>`).join('')}
                 </ul>
             </div>
             ` : ''}
@@ -320,15 +333,17 @@ function showPremiumReading(reading) {
             <div class="meaning-block">
                 <h4>Practical Guidance</h4>
                 <ul class="action-steps">
-                    ${reading.actionSteps.map(s => `<li>${s}</li>`).join('')}
+                    ${reading.actionSteps.map(s => `<li>${esc(s)}</li>`).join('')}
                 </ul>
             </div>
             ` : ''}
 
+            ${reading.blessing ? `
             <div class="meaning-block blessing">
                 <h4>Blessing</h4>
-                <p><em>"${reading.blessing}"</em></p>
+                <p><em>"${esc(reading.blessing)}"</em></p>
             </div>
+            ` : ''}
         </div>
     `;
 }
@@ -336,6 +351,13 @@ function showPremiumReading(reading) {
 async function handlePremiumPurchase() {
     // A verified, unused purchase (recorded by success.html) delivers directly — no second charge.
     if (window.PremiumEntitlement?.has()) {
+        // Returning from checkout reloads the page with nothing cast yet.
+        if (!currentRunes.length) {
+            hidePremiumModal();
+            alert('Your premium reading is ready. Cast your runes first, then tap "Get Premium Reading".');
+            elements.castBtn?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
         const question = elements.questionInput?.value || 'Your general question';
         const reading = await getPremiumReading(currentRunes, question, currentSpread);
         if (reading) { window.PremiumEntitlement.consume(); showPremiumReading(reading); return; }

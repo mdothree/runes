@@ -17,7 +17,7 @@ export const runes = [
     astrology: "Aries",
     upright: {
       brief: "Abundance and success are flowing to you.",
-      meaning: "Fehu represents cattle—wealth that can be moved and multiplied. This rune signifies success, achievement, and the流动性 of resources. It speaks of financial gain, social status, and the power that comes with abundance.",
+      meaning: "Fehu represents cattle—wealth that can be moved and multiplied. This rune signifies success, achievement, and the flow of resources. It speaks of financial gain, social status, and the power that comes with abundance.",
       guidance: "Your efforts are paying off. New opportunities for growth are emerging. Use your resources wisely and share your blessings."
     },
     reversed: {
