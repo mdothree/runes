@@ -373,7 +373,8 @@ async function handlePremiumPurchase() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 readingType: currentSpread === 'single' ? 'single-premium' : currentSpread,
-                email
+                email,
+                attribution: window.MdoAttribution?.get()
             })
         });
 
