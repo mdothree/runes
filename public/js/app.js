@@ -9,6 +9,26 @@ const API_URL = window.location.hostname === 'localhost'
 let currentSpread = 'single';
 let currentRunes = [];
 let isPremium = false;
+// Set when the API refuses the stored purchase (402/403) so checkout is offered.
+let entitlementRejected = false;
+
+function hasPurchase() {
+    return !entitlementRejected && window.PremiumEntitlement?.has() === true;
+}
+
+// Checkout readingType for the chosen spread (matches the API's pricing.json).
+function readingTypeForSpread() {
+    return currentSpread === 'single' ? 'single-premium' : currentSpread;
+}
+
+// Upsell/modal prices from js/config/pricing.json, the file the API charges
+// from (JARVIS #63): shown price == charged price.
+function updatePremiumPrices() {
+    document.querySelectorAll('.spread-price-now').forEach(el => {
+        el.dataset.price = readingTypeForSpread();
+        if (window.MdoPricing) el.textContent = window.MdoPricing.price(el.dataset.price, el.textContent);
+    });
+}
 
 const positions = {
     1: ['Present'],
@@ -47,14 +67,12 @@ function setupEventListeners() {
     
     elements.spreadOptions?.forEach(option => {
         option.addEventListener('click', () => {
-            if (option.querySelector('.spread-badge.premium')) {
-                showPremiumModal();
-                return;
-            }
-            
+            // Every spread is a paid reading (JARVIS #94); the checkout prompt
+            // after the cast is priced for the chosen spread.
             elements.spreadOptions.forEach(o => o.classList.remove('active'));
             option.classList.add('active');
             currentSpread = option.dataset.spread;
+            updatePremiumPrices();
         });
     });
     
@@ -136,40 +154,30 @@ function showRunes() {
     elements.runesDisplay.scrollIntoView({ behavior: 'smooth' });
 }
 
+// Paid from first use (JARVIS #94): the cast's reading is the paid AI
+// interpretation. With a verified purchase it is delivered here; without one,
+// only the checkout prompt shows. (Browsing the rune library stays public.)
 function showReading() {
-    const question = elements.questionInput?.value || 'Your general question';
-    
-    elements.runeMeanings.innerHTML = currentRunes.map((rune, index) => `
-        <div class="rune-reading">
-            <div class="rune-reading-header">
-                <div class="rune-symbol">${rune.symbol}</div>
-                <div>
-                    <h4>${rune.name}</h4>
-                    ${currentRunes.length > 1 ? `<span class="rune-position">${positions[currentRunes.length][index]}</span>` : ''}
-                </div>
-            </div>
-            <div class="meaning-block">
-                <h4>Core Meaning</h4>
-                <p>${rune.upright.meaning}</p>
-            </div>
-            <div class="meaning-block">
-                <h4>Guidance</h4>
-                <p>${rune.upright.guidance}</p>
-            </div>
-            <div class="meaning-block">
-                <h4>When Reversed</h4>
-                <p>${rune.reversed.meaning}</p>
-            </div>
-        </div>
-    `).join('');
-    
+    entitlementRejected = false;
+    elements.runeMeanings.innerHTML = '';
     elements.readingSection.style.display = 'block';
-    
-    if (currentSpread === 'single') {
+    updatePremiumPrices();
+    elements.premiumUpsell.style.display = hasPurchase() ? 'none' : 'block';
+    if (hasPurchase()) deliverPaidReading();
+}
+
+async function deliverPaidReading() {
+    elements.runeMeanings.innerHTML = '<p>✨ Channeling your AI rune reading...</p>';
+    const question = elements.questionInput?.value || 'Your general question';
+    const reading = await getPremiumReading(currentRunes, question, currentSpread);
+    if (reading) { window.PremiumEntitlement.consume(); showPremiumReading(reading); return; }
+    if (entitlementRejected) {
+        // The purchase on this device doesn't cover this spread (or was used up).
+        elements.runeMeanings.innerHTML = '';
         elements.premiumUpsell.style.display = 'block';
-    } else {
-        elements.premiumUpsell.style.display = 'none';
+        return;
     }
+    elements.runeMeanings.innerHTML = '<p>Your purchase is confirmed, but the reading service is temporarily unavailable. Please try again shortly — you will not be charged again.</p>';
 }
 
 function reset() {
@@ -287,6 +295,10 @@ async function getPremiumReading(runesData, question, spreadType) {
             })
         });
 
+        if (response.status === 402 || response.status === 403) {
+            entitlementRejected = true;
+            return null;
+        }
         const data = await response.json();
         if (data.success) {
             return data.reading;
@@ -350,7 +362,7 @@ function showPremiumReading(reading) {
 
 async function handlePremiumPurchase() {
     // A verified, unused purchase (recorded by success.html) delivers directly — no second charge.
-    if (window.PremiumEntitlement?.has()) {
+    if (hasPurchase()) {
         // Returning from checkout reloads the page with nothing cast yet.
         if (!currentRunes.length) {
             hidePremiumModal();
@@ -358,11 +370,9 @@ async function handlePremiumPurchase() {
             elements.castBtn?.scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
         }
-        const question = elements.questionInput?.value || 'Your general question';
-        const reading = await getPremiumReading(currentRunes, question, currentSpread);
-        if (reading) { window.PremiumEntitlement.consume(); showPremiumReading(reading); return; }
-        alert('Your purchase is confirmed, but the reading service is temporarily unavailable. Please try again shortly — you will not be charged again.');
-        return;
+        hidePremiumModal();
+        await deliverPaidReading();
+        if (!entitlementRejected) return;
     }
     const email = prompt('Enter your email to receive your premium reading:');
     if (!email) return;
@@ -372,7 +382,7 @@ async function handlePremiumPurchase() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                readingType: currentSpread === 'single' ? 'single-premium' : currentSpread,
+                readingType: readingTypeForSpread(),
                 email
             })
         });

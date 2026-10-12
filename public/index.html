@@ -103,19 +103,19 @@
                             <div class="spread-badge">BASIC</div>
                             <h4>Single Rune</h4>
                             <p>Quick daily guidance</p>
-                            <span class="price">Basic</span>
+                            <span class="price" data-price="single-premium">$5</span>
                         </div>
                         <div class="spread-option" data-spread="three">
                             <div class="spread-badge premium">PREMIUM</div>
                             <h4>Three Runes</h4>
                             <p>Past • Present • Future</p>
-                            <span class="price">$4.99</span>
+                            <span class="price" data-price="three">$10</span>
                         </div>
                         <div class="spread-option" data-spread="five">
                             <div class="spread-badge premium">PREMIUM</div>
                             <h4>Five Runes</h4>
                             <p>Cross of destiny</p>
-                            <span class="price">$7.99</span>
+                            <span class="price" data-price="five">$10</span>
                         </div>
                     </div>
                 </div>
@@ -157,7 +157,7 @@
                             <li>✨ Custom affirmation</li>
                         </ul>
                         <button class="btn-premium" id="upgrade-btn" onclick="handlePremiumPurchase()">
-                            Get Premium Reading - $4.99
+                            Get Premium Reading - <span class="spread-price-now" data-price="single-premium">$5</span>
                         </button>
                     </div>
 
@@ -190,7 +190,7 @@
                     <li>✨ Custom affirmation</li>
                 </ul>
                 <button class="btn-premium modal-btn" id="modal-upgrade-btn" onclick="handlePremiumPurchase()">
-                    Get Premium - $4.99
+                    Get Premium - <span class="spread-price-now" data-price="single-premium">$5</span>
                 </button>
                 <button class="modal-skip" id="modal-skip">Maybe Later</button>
             </div>
@@ -232,21 +232,10 @@
             <div class="container">
                 <h2>Pricing</h2>
                 <div class="pricing-cards">
-                    <div class="pricing-card">
-                        <h3>Basic</h3>
-                        <div class="price">$0</div>
-                        <ul>
-                            <li>Single rune casts</li>
-                            <li>Basic rune meanings</li>
-                            <li>Unlimited readings</li>
-                            <li>Share readings</li>
-                        </ul>
-                        <button class="btn-secondary" id="start-reading-btn">Start Reading</button>
-                    </div>
                     <div class="pricing-card featured">
                         <div class="badge">Most Popular</div>
                         <h3>Premium</h3>
-                        <div class="price">$4.99</div>
+                        <div class="price"><span data-price="single-premium">$5</span> - <span data-price="five">$10</span></div>
                         <ul>
                             <li>AI-powered interpretations</li>
                             <li>Multi-rune spreads</li>
@@ -272,6 +261,7 @@
 
     <!-- Firebase is optional and lazy-loaded by js/config/firebase.js (off by default). -->
 
+    <script src="js/price-display.js"></script>
     <script src="js/entitlement.js"></script>
     <script src="js/app.js" type="module"></script>
 </body>
