@@ -254,7 +254,7 @@ function shareReading() {
     
     const text = `My Runes Reading: ${runeNames}
 
-Get your free reading at runes.mdo3d.com`;
+Get your reading at runes.mdo3d.com`;
     
     if (navigator.share) {
         navigator.share({
