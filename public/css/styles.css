@@ -797,3 +797,18 @@ footer p {
 @media (max-width: 768px) {
     .nav-links a, .footer-links a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; }
 }
+
+/* MOBILE-WARN: phone header. Below 768px the nav links were display:none with no
+   menu toggle, leaving only the logo (sections unreachable from the header). Show
+   them on one row with the logo; 44px tap targets from A11Y-013 kept. */
+@media (max-width: 768px) {
+    .nav-links { display: flex; flex-wrap: nowrap; justify-content: flex-end; gap: 18px; }
+    .nav-links a { margin-left: 0; white-space: nowrap; }
+}
+@media (max-width: 400px) {
+    header { padding: 6px 0; }
+    header nav { flex-wrap: wrap; gap: 0 8px; }
+    .logo h1 { font-size: 1.1rem; line-height: 1.3; white-space: nowrap; }
+    .nav-links { gap: 10px; }
+    .nav-links a { font-size: .8rem; }
+}
