@@ -812,3 +812,6 @@ footer p {
     .nav-links { gap: 10px; }
     .nav-links a { font-size: .8rem; }
 }
+
+/* No italics (Principal 10-16): emphasis by colour or weight. */
+em, i, cite, q, dfn, var, address { font-style: normal; }
