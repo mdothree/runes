@@ -868,3 +868,6 @@ html[data-theme="dark"] .mdo-theme .mdo-i-moon, html:not([data-theme="dark"]) .m
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
+
+/* No italics (Principal 10-16): emphasis by colour or weight. */
+em, i, cite, q, dfn, var, address, blockquote { font-style: normal; }
